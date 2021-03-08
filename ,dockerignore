@@ -1,0 +1,5 @@
+# ignorar todo, que no vayan al docker engine
+**/*
+# permitir solo estas
+!src
+!Dockerfile
