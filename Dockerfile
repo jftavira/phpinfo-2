@@ -2,5 +2,5 @@
 FROM alpine
 # equivalente a mkdir -p /app && cd /app
 WORKDIR /app
-# copia de una carpeta local del proyecto al docker
+# copia de una carpeta local del proyecto los contenidos  al docker (pero no el directorio)
 COPY src .
