@@ -1,0 +1,85 @@
+#En kubernetes haría falta un archivo para cada archivo, si va junto tiene que separarse con guiones
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+#los metadatos son obligatorios en Kubernetes
+  name: phpinfo-2
+spec:
+  replicas: 2
+  selector: 
+    matchLabels: 
+      app: phpinfo-2
+  template:
+    metadata:
+      labels:
+        app: phpinfo-2
+    spec:
+      containers:
+      - name: phpinfo-2
+#ahora todo lo que escribo está recomendado en orden alfabetico
+        image: jftavira/phpinfo-2:latest
+        imagePullPolicy: Always
+        livenessProbe: 
+          tcpSocket: 
+            port: 8080
+          failureThreshold: 3
+          periodSeconds: 10
+          sucessThreshold: 1
+          timeoutSeconds: 1
+        ports: 
+        - containerPort: 8080
+        readinessProbe: 
+          httpGet: 
+            path: /
+            port: 8080
+          failureThreshold: 3
+          periodSeconds: 10
+          sucessThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits: 
+            cpu: 100m
+            memory: 100M
+          requests:
+            cpu: 100m
+            memory: 100M
+---
+# politica de cortafuegos
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+spec:
+  podSelector:
+  policyTypes:
+  - Ingress
+---
+# regla aperturista
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: phpinfo-2
+spec:
+  ingress:
+  - ports:
+    - port: 8080
+  podSelector:
+    matchLabels:
+      app: phpinfo-e
+  policyTypes:
+  - Ingress  
+---  
+# servicio balanceador de carga hacia los pods
+apiVersion:v1
+kind: Service
+metadata:
+  name: phpinfo-2
+spec:
+  ports:
+  - port: 8080
+    targetport: 8080
+  selector:
+    app: phpinfo-2
+  type: ClusterIP
+---  
