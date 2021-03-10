@@ -71,7 +71,7 @@ spec:
   - Ingress  
 ---  
 # servicio balanceador de carga hacia los pods
-apiVersion:v1
+apiVersion: v1
 kind: Service
 metadata:
   name: phpinfo-2
