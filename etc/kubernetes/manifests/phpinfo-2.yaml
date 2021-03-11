@@ -49,7 +49,7 @@ kind: NetworkPolicy
 metadata:
   name: default-deny-all
 spec:
-  podSelector:
+  podSelector: {}
   policyTypes:
   - Ingress
 ---
